@@ -1,2 +1,2 @@
 # Stereochimie
-Project for chemestry about stereochemestry
+Project for chemestry about stereochemestry.
