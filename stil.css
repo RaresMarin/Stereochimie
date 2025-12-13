@@ -5,9 +5,11 @@ body{
     background-attachment: fixed;
     background-repeat: no-repeat;
     overflow: hidden;
+    color:white;
 }
 #Stereo{
     color: white;
+    padding:20px;
     width: 80%;
     height: auto;
     margin: auto;
@@ -137,4 +139,20 @@ label{
 }
 input[type="checkbox"]{
     cursor: pointer;
+}
+@media only screen and (max-width: 600px) {
+    #NU{
+        font-size: 40px;
+        width: 90%;
+    }
+    button{
+        width: 60%;
+        font-size: 20px;
+    }
+    h2{
+        font-size: 30px;
+    }
+    p{
+        font-size: 20px;
+    }
 }

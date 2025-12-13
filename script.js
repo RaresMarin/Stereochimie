@@ -1,13 +1,11 @@
 
-let ok= true;
 function fun(){
-  if(ok==true){
+  if(document.getElementById("dificil").checked){
     document.getElementById("B").setAttribute("href","test.html");
   }
   else{
     document.getElementById("B").setAttribute("href","test1.html");
   }
-  ok = !ok;
 }
 let culori = ["#830000", "#ffc60b", "#ff960eff"];
 let culoriArmonioase = ["#ff6666", "#fff2b2", "#ff9933"];
