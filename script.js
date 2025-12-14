@@ -1,10 +1,8 @@
-
-function fun(){
-  if(document.getElementById("dificil").checked){
-    document.getElementById("B").setAttribute("href","test.html");
-  }
-  else{
-    document.getElementById("B").setAttribute("href","test1.html");
+function fun() {
+  if (document.getElementById("dificil").checked) {
+    document.getElementById("B").href = "test1.html";
+  } else if (document.getElementById("mediu").checked) {
+    document.getElementById("B").href = "test.html";
   }
 }
 let culori = ["#830000", "#ffc60b", "#ff960eff"];
