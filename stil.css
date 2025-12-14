@@ -7,13 +7,68 @@ body{
     overflow: hidden;
     color:white;
 }
+.card {
+width: 100%;
+height: 100%;
+position: relative;
+transform-style: preserve-3d;
+transform: rotateY(0deg);
+transition: transform 0.8s ease-in-out;
+}
+
+.carduri:hover .card {
+transform: rotateY(180deg);
+}
+
+.fata-cardului {
+position: absolute;
+width: 100%;
+height: 100%;
+backface-visibility: hidden;
+border-radius: 12px;
+display: flex;
+justify-content: center;
+align-items: center;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+#fata {
+  align-items: center;
+  text-align:center;
+background-color:transparent;
+color: white;
+font-family: "Comic Sans", cursive;
+}
+
+#spate {
+background-color:transparent;
+color: rgb(255, 255, 255);
+
+font-family: "Comic Sans", cursive;
+text-align:center;
+transform: rotateY(180deg);
+}
+
+#flash {
+display: flex;
+justify-content: center;
+align-items: center;
+  gap: 20px; 
+  padding: 20px;
+}
+.carduri{
+  width:500px;
+height:300px;
+perspective:1000px;
+
+}
 #Stereo{
     color: white;
     padding:20px;
     width: 80%;
     height: auto;
     margin: auto;
-    background-color: #ffa45f;
+    background-color: #ff872b;
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -155,4 +210,9 @@ input[type="checkbox"]{
     p{
         font-size: 20px;
     }
+}
+label{
+    margin-left: 10px; 
+    cursor: pointer;
+    font-size: 20px;
 }
