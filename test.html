@@ -7,13 +7,139 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="stil.css">
-                <link rel="icon" href="fundal.jpg" type="image/jpg">
-
+        <link rel="icon" href="fundal.jpg" type="image/jpg">
+         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+    body{
+        overflow-y:scroll;
+    }
+</style>
     </head>
     <body>
-        <div style="display:grid;justify-content: center;align-items: center;height: 40vh;">
-                <h2 style="text-align: center;">Usor</h2>
+        <div style="display:grid;justify-content: center;align-items: center;height: 90vh;">
+                <div  class="quiz-container" id="Stereo" style="backdrop-filter:blur(20px);width:50vw;height: auto;">
+                 <div style="display: inline;"> 
+                         <a href="index1.html" style="display: block;"><i style="float:right" class="fa-solid fa-book"></i></a> 
+                    <a href="index.html" style="display: block;"><i style="padding: 5px" class="fa-solid fa-house"></i></a> 
+                    </div>
+                    <div id="quiz" style="display:block;margin:auto;text-align: center;"></div>
+        <p id="result"></p>
+                            <div id="answers-review"></div>
+                            <button onclick="nextQuestion()" style="width: 50vw;">Următoarea întrebare</button>
+                            <button id="show-answers" onclick="toggleAnswers()" style="display: none;width: 50vw;">Afișează răspunsurile</button>
+                       <div class="progress-bar" style="display: none;"><div class="progress" id="progress"></div></div>
+
+                    </div>
                 </div>
+
+        <button id="back-to-score" onclick="backToScore()" style="display: none;">Înapoi la rezultat</button>
+    </div>
+    
+    
+    <script>
+       const questions = [
+{ question: "1) Care dintre următorii izomeri sunt de constituție?",
+  options: ["a) de conformație", "b) izomeriii geometrici", "c) izomeri optici", "d) enantiomeri", "e) tautomeri"], answer: "e) tautomeri" },
+
+{ question: "2) Ce realizează Formulelele Fischer?",
+  options: ["a) trecerea de la structura plană în cea bidimensionala", "b) trecerea de la structura plană în cea tridimensională", "c) trecerea de la structura tridimensională în cea plană", "d) trecerea de la structura tridimensionala în cea bidimensionala", "e) niciuna dintre variante"], answer: "c) trecerea de la structura tridimensională în cea plană" },
+
+{ question: "3) Câte perechi de enantiomeri pot fi obținute dintr-un compus cu doi atomi de carbon asimetrici cu substituenți diferiți?",
+  options: ["a) 1", "b) 2", "c) 3", "d) 4", "e) 5"], answer: "d) 4" },
+
+{ question: "4) Câți enantiomeri are acidul tartric?",
+  options: ["a) 2 enantiomeri", "b) 2 enantiomeri și o mezoformă", "c) 4 enantiomeri", "d) 4 enantiomeri și o mezoformă", "e) 1 enantiomer"], answer: "b) 2 enantiomeri și o mezoformă" },
+
+{ question: "5) Ce conține o moleculă chirală?",
+  options: ["a) cel puțin un carbon asimetric", "b) izomeri geometrici", "c) diastereoizomeri", "d) amestec racemic", "e) formulele fischer"], answer: "a) cel puțin un carbon asimetric" },
+
+{ question: "6) Cum se numește enantiomerul care rotește planul luminii polarizate spre dreapta?",
+  options: ["a) nici unul", "b) levogir", "c) sinister", "d) dextrogir", "e) introgir"], answer: "d) dextrogir" },
+
+{ question: "7) Pentru a avea mezoformă, un compus trebuie să conțină:",
+  options: ["a) 2C* cu compuși diferiți", "b) un plan de simetrie", "c) un enantiomer activ optic", "d) formule fischer ", "e) 1 carbon asimetric"], answer: "b) un plan de simetrie" },
+
+{ question: "8) Care dintre următoarele afirmații este greșită?",
+  options: ["a) O pereche de enantiomeri este activă optic", "b) 2C* formează 4 enantiomeri dacă nu au aceasi substituenți", "c) Enantiomerul Levogir rotește spre stânga", "d) moleculele chirale prezintă un carbon asimetric", "e) amestecul racemic este activ optic"], answer: "e) amestecul racemic este activ optic" },
+
+{ question: "9) Ce volum de soluție(+) de glicină de concentrație molară Cm=0,1 mol/L trebuie adăugat peste 20mL(-) glicină de concentrație molară Cm = 0,2mol/L?",
+  options: ["a) 10ml", "b) 20ml", "c) 30ml", "d) 40ml", "e) niciuna dintre variante"], answer: "d) 40ml" },
+];
+let currentQuestion = 0;
+        let score = 1;
+        let userAnswers = [];
+        
+        function loadQuestion() {
+            const quizDiv = document.getElementById("quiz");
+            quizDiv.innerHTML = `<p class='question'>${questions[currentQuestion].question}</p>`;
+            
+            questions[currentQuestion].options.forEach(option => {
+                quizDiv.innerHTML += `
+                    <label>
+                        <input type='radio' name='answer' value='${option}'> ${option}
+                    </label>
+                `;
+            });
+        }
+        
+        function nextQuestion() {
+            const selected = document.querySelector("input[name='answer']:checked");
+            if (!selected) return alert("Selectează un răspuns!");
+            
+            userAnswers.push({
+                question: questions[currentQuestion].question,
+                selected: selected.value,
+                correct: questions[currentQuestion].answer
+            });
+            
+            if (selected.value === questions[currentQuestion].answer) {
+                score++;
+            }
+            
+            currentQuestion++;
+            updateProgress();
+            
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz").innerHTML = "Test finalizat!";
+                document.getElementById("result").innerHTML = `Scorul tău: ${score} / ${questions.length+1}`;
+                document.querySelector("button").style.display = "none";
+                document.getElementById("show-answers").style.display = "block";
+                document.getElementById("progress").style.width = "100%";
+            }
+        }
+        
+        function updateProgress() {
+            let progress = (score / questions.length) * 100;
+            document.getElementById("progress").style.width = `${progress}%`;
+            document.getElementById("progress").innerText = `${score}/${questions.length+1}`;
+        }
+        
+        function toggleAnswers() {
+            const reviewDiv = document.getElementById("answers-review");
+            if (reviewDiv.style.display === "none") {
+                reviewDiv.style.display = "block";
+                reviewDiv.innerHTML = "<h3>Răspunsurile tale:</h3>";
+                userAnswers.forEach(item => {
+                    reviewDiv.innerHTML += `<p>${item.question} <br> Răspunsul tău: <b>${item.selected}</b> <br> Răspuns corect: <b>${item.correct}</b></p>`;
+                });
+            } else {
+                reviewDiv.style.display = "none";
+            }
+        }
+        
+        function backToScore() {
+            document.getElementById("answers-review").style.display = "none";
+            document.getElementById("answers-review").style.width = "20%";
+            document.getElementById("result").scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        loadQuestion();
+        </script>
+        </body>
+</html>
+
         </div>
         <script src="script.js" async defer></script>
     </body>
