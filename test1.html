@@ -8,24 +8,137 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="stil.css">
         <link rel="icon" href="fundal.jpg" type="image/jpg">
-
+         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+    body{
+        overflow-y:scroll;
+    }
+</style>
     </head>
     <body>
-        <div style="display:grid;justify-content: center;align-items: center;height: 40vh;">
-                <h2 style="text-align: center;">Greu</h2>
-                <div style="margin-top:100px;">
-                <p>Întrebare 1</p>
-                <div style="margin:none;">
-                    <input type="radio" id="r1" name="q1" value="a">
-                    <label for="r1">Varianta A</label><br>
-                    <input type="radio" id="r2" name="q1" value="b">
-                    <label for="r2">Varianta B</label><br>
-                    <input type="radio" id="r3" name="q1" value="c">
-                    <label for="r3">Varianta C</label><br>
-                    <input type="radio" id="r4" name="q1" value="d">
-                    <label for="r4">Varianta D</label><br>
+        <div style="display:grid;justify-content: center;align-items: center;height: 90vh;">
+                <div  class="quiz-container" id="Stereo" style="backdrop-filter:blur(20px);width:50vw;height: auto;">
+                    <div style="display: inline;"> 
+                         <a href="index2.html" style="display: block;"><i style="float:right" class="fa-solid fa-book"></i></a> </div>
+                        <a href="index.html" style="display: block;"><i class="fa-solid fa-house"></i></a> 
+                 <div id="quiz" style="display:block;margin:auto;text-align: center;"></div>
+        <p id="result"></p>
+                            <div id="answers-review"></div>
+                            <button onclick="nextQuestion()" style="width: 50vw;">Următoarea întrebare</button>
+                            <button id="show-answers" onclick="toggleAnswers()" style="display: none;width: 50vw;">Afișează răspunsurile</button>
+                       <div class="progress-bar" style="display: none;"><div class="progress" id="progress"></div></div>
+
+                    </div>
                 </div>
-                </div>
+
+        <button id="back-to-score" onclick="backToScore()" style="display: none;">Înapoi la rezultat</button>
+    </div>
+    
+    
+    <script>
+       const questions = [
+{ question: "1) Care ester cu formula moleculară C5H10O2 **prezintă activitate optică?**",
+  options: ["a) formiat de izobutil", "b) acetatul de tert-butil", "c) izovalerianatul de metil", "d) formiat de sec-butil", "e) metilbutiratul de metil"], answer: "d) formiat de sec-butil" },
+
+{ question: "2) Numărul de hidrocarburi cu activitate optică având structura HC(C)H5 şi care consumă brom este:",
+  options: ["a) 1", "b) 2", "c) 3", "d) 4", "e) 5"], answer: "b) 2" },
+
+{ question: "3) Numărul de hidrocarburi cu activitate optică având structura CH(C-H-*) este:",
+  options: ["a) 1", "b) 2", "c) 3", "d) 4", "e) 5"], answer: "b) 2" },
+
+{ question: "4) Care dintre următoarele **prezintă activitate optică?**",
+  options: ["a) 2-pentanolul", "b) sulfatul acid de neopentil", "c) alanina", "d) gliceraldehida", "e) acidul lactic"], answer: "e) acidul lactic" },
+
+{ question: "5) Compusul C6H10O după reacţia cu oxim de brom în mediu apoş prezintă **câţi stereoizomeri?**",
+  options: ["a) 1", "b) 2", "c) 3", "d) 4", "e) 5"], answer: "d) 4" },
+
+{ question: "6) Câţi atomi de carbon asimetrici are compusul obţinut prin adăugarea acetilenei la benzaldehidă în raport molar 1:2 şi apoi hidrogenare cu H2?",
+  options: ["a) nici unul", "b) 1", "c) 2", "d) 3", "e) 4"], answer: "c) 2" },
+
+{ question: "7) Compusul cu formula (nereprodus aici) oxidat cu Cr2O72– în mediu acid consumă **cât volum de soluţie?**",
+  options: ["a) 2 l", "b) 1 l", "c) 0.5 l", "d) 1.5 l", "e) 0.1 l"], answer: "a) 2 l" },
+
+{ question: "8) Compusul obţinut la întrebarea anterioară are **ce tip de izomer de stereo?**",
+  options: ["a) 1", "b) 2", "c) 3", "d) 4", "e) 5"], answer: "b) 2" },
+
+{ question: "9) Compusul 2-hidroxipentena:",
+  options: ["a) nu prezintă stereoizomeri", "b) prezintă + stereoizomeri", "c) prezintă mezoforme", "d) prezintă doar 2 stereoizomeri", "e) prezintă 6 stereoizomeri"], answer: "b) prezintă + stereoizomeri" },
+];
+let currentQuestion = 0;
+        let score = 1;
+        let userAnswers = [];
+        
+        function loadQuestion() {
+            const quizDiv = document.getElementById("quiz");
+            quizDiv.innerHTML = `<p class='question'>${questions[currentQuestion].question}</p>`;
+            
+            questions[currentQuestion].options.forEach(option => {
+                quizDiv.innerHTML += `
+                    <label>
+                        <input type='radio' name='answer' value='${option}'> ${option}
+                    </label>
+                `;
+            });
+        }
+        
+        function nextQuestion() {
+            const selected = document.querySelector("input[name='answer']:checked");
+            if (!selected) return alert("Selectează un răspuns!");
+            
+            userAnswers.push({
+                question: questions[currentQuestion].question,
+                selected: selected.value,
+                correct: questions[currentQuestion].answer
+            });
+            
+            if (selected.value === questions[currentQuestion].answer) {
+                score++;
+            }
+            
+            currentQuestion++;
+            updateProgress();
+            
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz").innerHTML = "Test finalizat!";
+                document.getElementById("result").innerHTML = `Scorul tău: ${score} / ${questions.length+1}`;
+                document.querySelector("button").style.display = "none";
+                document.getElementById("show-answers").style.display = "block";
+                document.getElementById("progress").style.width = "100%";
+            }
+        }
+        
+        function updateProgress() {
+            let progress = (score / questions.length) * 100;
+            document.getElementById("progress").style.width = `${progress}%`;
+            document.getElementById("progress").innerText = `${score}/${questions.length+1}`;
+        }
+        
+        function toggleAnswers() {
+            const reviewDiv = document.getElementById("answers-review");
+            if (reviewDiv.style.display === "none") {
+                reviewDiv.style.display = "block";
+                reviewDiv.innerHTML = "<h3>Răspunsurile tale:</h3>";
+                userAnswers.forEach(item => {
+                    reviewDiv.innerHTML += `<p>${item.question} <br> Răspunsul tău: <b>${item.selected}</b> <br> Răspuns corect: <b>${item.correct}</b></p>`;
+                });
+            } else {
+                reviewDiv.style.display = "none";
+            }
+        }
+        
+        function backToScore() {
+            document.getElementById("answers-review").style.display = "none";
+            document.getElementById("answers-review").style.width = "20%";
+            document.getElementById("result").scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        loadQuestion();
+        </script>
+        </body>
+</html>
+
         </div>
         <script src="script.js" async defer></script>
     </body>
